@@ -1,48 +1,58 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import './update.css'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
 
 
 const UpdateUser = () => {
-    const users = {
-        name: "",
-        email: "",
-        address: "",
-    }
-    const [user, setUser] = useState(users)
     const navigate = useNavigate();
     const { id } = useParams();
 
-    const inputHandler = (e) => {
-        const { name, value } = e.target
-        console.log(name, value)
+    const validationSchema = Yup.object({
+        name: Yup.string()
+            .required('Name is required')
+            .min(3, 'Name must be at least 3 characters'),
+        email: Yup.string()
+            .required('Email is required')
+            .email('Invalid email format'),
+        address: Yup.string()
+    });
 
-        setUser({ ...user, [name]: value });
-    };
+    const formik = useFormik({
+        initialValues: {
+            name: "",
+            email: "",
+            address: ""
+        },
+        validationSchema: validationSchema,
+        onSubmit: async (values) => {
+            try {
+                const response = await axios.put(`http://localhost:8000/api/update/getById/${id}`, values)
+                toast.success("User updated successfully", { position: "top-right" })
+                navigate("/")
+            } catch (error) {
+                console.log(error)
+                toast.error('Error updating user', { position: "top-right" })
+            }
+        }
+    });
 
     useEffect(() => {
         axios.get(`http://localhost:8000/api/getById/${id}`)
             .then(response => {
-                setUser(response.data)
+                formik.setValues(response.data)
             })
             .catch(error => {
                 console.log(error)
             })
     }, [id]);
 
-    const submitForm = async (e) => {
+    const submitForm = (e) => {
         e.preventDefault();
-        axios.put(`http://localhost:8000/api/update/getById/${id}`, user)
-        .then((response) => {
-            toast.success("User updated successfully", { position: "top-right" })
-            navigate("/")
-        })
-            .catch((error) => {
-                console.log(error)
-            })
-
+        formik.handleSubmit(e);
     }
     return (
         <div className='addUser'>
@@ -54,31 +64,40 @@ const UpdateUser = () => {
                     <label htmlFor='name'>Name:</label>
                     <input type="text"
                         id='name'
-                        value={user.name}
-                        onChange={inputHandler}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.name}
                         name='name'
                         autoComplete='off'
                         placeholder='Enter your name'
                     />
+                    {formik.touched.name && formik.errors.name ? (
+                        <span className="error">{formik.errors.name}</span>
+                    ) : null}
                 </div>
                 <div className='inputGroup'>
                     <label htmlFor='email'>Email:</label>
                     <input type="text"
                         id='email'
-                        value={user.email}
-                        onChange={inputHandler}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.email}
                         name='email'
                         autoComplete='off'
                         placeholder='Enter your email'
                     />
+                    {formik.touched.email && formik.errors.email ? (
+                        <span className="error">{formik.errors.email}</span>
+                    ) : null}
                 </div>
 
                 <div className='inputGroup'>
                     <label htmlFor='address'>Address:</label>
                     <input type="text"
                         id='address'
-                        value={user.address}
-                        onChange={inputHandler}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.address}
                         name='address'
                         autoComplete='off'
                         placeholder='Enter your address'
