@@ -1,16 +1,58 @@
-import React, { useEffect, useState } from 'react'
+﻿import React, { useEffect, useState } from 'react'
 import './user.css'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast';
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+
+
+const validationSchema = Yup.object({
+  email: Yup.string()
+    .required('Email is required!')
+    .email('Invalid email format!'),
+  password: Yup.string()
+    .required('Password is required!')
+    .min(6, 'Password must be at least 6 characters'),
+});
+
 
 const User = () => {
+  const navigate = useNavigate();
   const [users, setUsers] = useState([])
+
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: async (values) => {
+      try {
+        const response = await axios.post('http://localhost:8000/api/login', {
+          email: values.email,
+          password: values.password
+        });
+
+        toast.success('Login successful')
+        formik.resetForm();
+        navigate('/home');
+
+      } catch (error) {
+        console.log(error)
+        if (error.response && error.response.status === 401) {
+          toast.error('Invalid credentials', { position: "top-right" })
+        } else {
+          toast.error('Error during login', { position: "top-right" })
+        }
+      }
+    }
+  });
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get('http://localhost:8000/api/users')
-        console.log(response)
         setUsers(response.data)
       } catch (error) {
         console.log('Error fetching users:', error)
@@ -20,54 +62,52 @@ const User = () => {
     fetchData()
   }, []);
 
-  const deleteUser = async (userId) => {
-    await axios.delete(`http://localhost:8000/api/delete/getById/${userId}`)
-      .then((response) => {
-        setUsers((prevUsers) => prevUsers.filter(user => user._id !== userId))
-        toast.success("User deleted successfully", { position: "top-right" })
-
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  }
   return (
     <div>
       <div className='userTable'>
-        <Link to="/add" type="button" className="btn btn-primary">
-          Add User <i className="fa-solid fa-user-plus"></i>
-        </Link>
-        <table className='table table-bordered'>
-          <thead>
-            <tr>
-              <th scope='col'>S.No</th>
-              <th scope='col'>Name</th>
-              <th scope='col'>Email</th>
-              <th scope='col'>Address</th>
-              <th scope='col'>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user, index) => {
-              console.log(user)
-              return (
-                <tr>
-                  <td>{index + 1} </td>
-                  <td>{user.name}</td>
-                  <td>{user.email}</td>
-                  <td>{user.address}</td>
-                  <td className='actionButtons'>
-                    <Link to={'/update/' + user._id} type="button" className="btn btn-info"><i className="fa-solid fa-pen-to-square"></i></Link>
-                    <button
-                      onClick={() => deleteUser(user._id)}
-                      type="button" className="btn btn-danger"><i className="fa-solid fa-trash-can"></i></button>
-                  </td>
-                </tr>
-              )
-            })}
+        <h1>Learning made easy. Let's go</h1>
+        <h5>Sign in to your Account</h5>
+        <form onSubmit={formik.handleSubmit}>
+          <div className='inputGroup'>
+            <label htmlFor='email'>Email*:</label>
+            <input type="email"
+              id='email'
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.email}
+              name='email'
+              autoComplete='off'
+              placeholder='Enter Email'
+            />
+            {formik.touched.email && formik.errors.email ? (
+              <span className="error">{formik.errors.email}</span>
+            ) : null}
+          </div>
+          <div className='inputGroup'>
+            <label htmlFor='password'>Password*:</label>
+            <input type="password"
+              id='password'
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.password}
+              name='password'
+              autoComplete='off'
+              placeholder='Enter Password'
+            />
+            {formik.touched.password && formik.errors.password ? (
+              <span className="error">{formik.errors.password}</span>
+            ) : null}
+          </div>
+          <button type="submit" className="btn btn-primary">
+            sign in
+          </button>
+        </form>
+        <p>Don't have an account?
+          <button onClick={() => navigate('/add')} className="btn btn-primary">
+            sign up <i className="fa-solid fa-user-plus"></i>
+          </button>
+        </p>
 
-          </tbody>
-        </table>
       </div>
     </div>
   )

@@ -3,12 +3,17 @@ import User from './getusers/user';
 import AddUser from './adduser/AddUser';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import UpdateUser from './updateuser/Update';
+import Home from './homepage/home';
 
 function App() {
   const route = createBrowserRouter([
     {
       path: "/",
       element: <User />
+    },
+    {
+      path: "/home",
+      element: <Home />
     },
     {
       path: "/add",

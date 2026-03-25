@@ -1,25 +1,96 @@
-.userTable{
-    width: 60%;
-    margin: 50px auto;
-    background-color: white;
-    padding: 50px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-}
-.userTable table{
+.userTable {
     width: 100%;
-   margin-top: 30px;
-    
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 50px 40px;
+    background-color: white;
 }
-.userTable table thead th{
-    background-color: darkcyan;
+
+.userTable h1 {
+    margin: 0 0 60px 0;
+    color: darkcyan;
+
+}
+
+.userTable h5 {
+    font-size: 24px;
+    font-weight: 700;
+    color: darkcyan;
+    margin: 0 0 40px 0;
+}
+
+.userTable .inputGroup {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+}
+
+.userTable .inputGroup label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.userTable .inputGroup input {
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.3s ease;
+}
+
+.userTable .inputGroup input:focus {
+    outline: none;
+    border-color: #0052cc;
+}
+
+.userTable .inputGroup input::placeholder {
+    color: #999;
+}
+
+.userTable .error {
+    color: #ff0000;
+    font-size: 12px;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+.userTable .btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: #0052cc;
     color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
 }
-.userTable table tbody td{
-   padding: 10px;
-   text-align: center;
-   vertical-align: middle;
+
+.userTable .btn:hover {
+    background-color: #0041a3;
 }
-.actionButtons button{
-    margin: 0px 10px;
+
+.userTable p {
+    margin-top: 30px;
+    font-size: 15px;
+    color: #333;
+}
+
+.userTable p .btn {
+    /* padding: 10px; */
+    background: none;
+    color: #0052cc;
+    margin-top: 10px;
+    font-size: 15px;
+}
+
+.userTable p .btn:hover {
+    background-color: transparent;
+    color: #0041a3;
 }

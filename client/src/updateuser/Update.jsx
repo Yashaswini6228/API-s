@@ -105,7 +105,6 @@ const UpdateUser = () => {
                 </div>
                 <div className='inputGroup'>
                     <button type="submit" className="btn btn-primary">Update</button>
-
                 </div>
             </form>
         </div>
