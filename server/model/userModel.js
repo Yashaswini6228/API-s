@@ -10,9 +10,29 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    address: {
+    password: {
         type: String,
         required: true
+    },
+    mobileNumber: {
+        type: String,
+        required: true
+    },
+    yearOfJoining: {
+        type: String,
+        required: true
+    },
+    yearOfPassout: {
+        type: String,
+        required: false
+    },
+    tenthPercentage: {
+        type: Number,
+        required: false
+    },
+    resume: {
+        type: String,
+        required: false
     }
 });
 

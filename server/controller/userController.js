@@ -2,7 +2,14 @@ import User from '../model/userModel.js';
 
 export const create = async (req, res) => {
     try {
-        const newUser = new User(req.body);
+        const userData = req.body;
+        
+        // If file was uploaded, add filename to userData
+        if (req.file) {
+            userData.resume = req.file.filename;
+        }
+        
+        const newUser = new User(userData);
         const {email} = newUser;
 
         const userExists = await User.findOne({ email });
@@ -10,8 +17,7 @@ export const create = async (req, res) => {
             return res.status(400).json({Message: 'User with this email already exists' });
         }
         const savedData = await newUser.save();
-        // res.status(200).json(savedData);
-        res.status(200).json({ message: "User created successfully" });
+        res.status(201).json({ message: "User created successfully", data: savedData });
 
 
     } catch (error) {
@@ -70,4 +76,25 @@ export const deleteUser = async (req, res) => {
     } catch (error) {
         res.status(500).json({ errorMessage: error.message });
     }   
+};
+
+export const login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        
+        // Check if user exists
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+        
+        // Check password (you should use bcrypt in production)
+        if (user.password !== password) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+        
+        res.status(200).json({ message: 'Login successful', data: user });
+    } catch (error) {
+        res.status(500).json({ errorMessage: error.message });
+    }
 };

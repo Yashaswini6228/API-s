@@ -2,14 +2,20 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
+import multer from 'multer';
 import route from './routes/userRoutes.js';
 import cors from 'cors';
 
+dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
-dotenv.config();
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Configure multer for file uploads
+const upload = multer({ dest: './uploads/' });
+app.use(upload.single('resume'));
 
 
 const PORT = process.env.PORT || 7000;
