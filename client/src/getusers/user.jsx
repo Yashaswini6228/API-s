@@ -34,6 +34,11 @@ const User = () => {
           password: values.password
         });
 
+        // Store the logged-in user ID in localStorage
+        if (response.data.data && response.data.data._id) {
+          localStorage.setItem('loggedInUserId', response.data.data._id);
+        }
+
         toast.success('Login successful')
         formik.resetForm();
         navigate('/home');
@@ -104,7 +109,7 @@ const User = () => {
         </form>
         <p>Don't have an account?
           <button onClick={() => navigate('/add')} className="btn btn-primary">
-            sign up <i className="fa-solid fa-user-plus"></i>
+            sign up 
           </button>
         </p>
 

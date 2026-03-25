@@ -1,31 +1,122 @@
-/* .addUser{
+.addUser {
     background-color: white;
-    width: 25%;
+    max-width: 1200px;
     margin: 50px auto;
     padding: 40px;
-    border-radius: 5px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
-.addUser .inputGroup{
-    width: 100%;
+
+.addUser h3 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: darkcyan;
+    margin-top: 30px;
+}
+
+.addUser h4 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    margin-top: 30px;
+    color: darkcyan;
+}
+
+.addUser .formSection {
+    margin-bottom: 30px;
+}
+
+.addUser .formGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.addUser .inputGroup {
     display: flex;
     flex-direction: column;
 }
-.addUser .inputGroup label{
-    font-size: 18px;
+
+.addUser .inputGroup label {
+    font-size: 14px;
     font-weight: 500;
-    margin-bottom: 5px;
+    color: #000;
+    margin-bottom: 8px;
 }
-.addUser .inputGroup input{
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
+
+.addUser .inputGroup input,
+.addUser .inputGroup select {
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid #ddd;
     border-radius: 4px;
-    margin-bottom: 20px;
+    font-family: inherit;
+    transition: border-color 0.3s ease;
 }
-.addUser h3{
-    text-align: center;
-    margin-bottom: 30px;
-    font-weight: bold;
-    color: darkcyan;
-    text-transform: uppercase;
-} */
+
+.addUser .inputGroup input:focus,
+.addUser .inputGroup select:focus {
+    outline: none;
+    border-color: #0052cc;
+    box-shadow: 0 0 4px rgba(0, 82, 204, 0.2);
+}
+
+.addUser .inputGroup input::placeholder {
+    color: #999;
+}
+
+.addUser .inputGroup .error {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+.addUser .inputGroup .file-name {
+    color: #557a5a;
+    font-size: 12px;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+.addUser .formActions {
+    margin-top: 40px;
+    display: flex;
+    gap: 15px;
+}
+
+.addUser .btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: #0052cc;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.addUser .btn:hover {
+    background-color: #003a99;
+}
+
+.addUser .btn.btn-primary {
+    background-color: #667eea;
+}
+
+.addUser .btn.btn-primary:hover {
+    background-color: #5568d3;
+}
+
+.addUserForm {
+    display: flex;
+    flex-direction: column;
+}
+
+.btns{
+    color: black;
+}

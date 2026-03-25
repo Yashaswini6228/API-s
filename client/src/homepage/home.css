@@ -1,9 +1,10 @@
 ﻿.home {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-color: rgb(140, 211, 211);
+  padding: 20px;
 }
 
 .homeContainer {
@@ -12,7 +13,8 @@
   border-radius: 10px;
   text-align: center;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  max-width: 500px;
+  width: 100%;
+  max-width: 1200px;
 }
 
 .homeContainer h1 {
@@ -45,6 +47,7 @@
 .btn-primary {
   background-color: #667eea;
   color: white;
+  width: 200px;
 }
 
 .btn-primary:hover {
@@ -55,11 +58,106 @@
 .btn-secondary {
   background-color: #f0f0f0;
   color: #333;
-  border: 2px solid #667eea;
+  display: flex;
+  width: 100px;
+  margin-top: 30px;
+
+
 }
 
 .btn-secondary:hover {
   background-color: #667eea;
   color: white;
   transform: translateY(-2px);
+}
+
+.usersTableSection {
+  margin-top: 50px;
+  text-align: left;
+}
+
+.usersTableSection h2 {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.usersTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.usersTable thead {
+  background-color: #667eea;
+  color: white;
+}
+
+.usersTable th {
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.usersTable td {
+  padding: 15px;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 14px;
+}
+
+.usersTable tbody tr {
+  transition: background-color 0.3s ease;
+}
+
+.usersTable tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-update,
+.btn-delete {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.btn-update {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.btn-update:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(76, 175, 80, 0.3);
+}
+
+.btn-delete {
+  background-color: #f44336;
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #da190b;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(244, 67, 54, 0.3);
+}
+
+.loadingText,
+.noUsersText {
+  color: #666;
+  font-size: 16px;
+  text-align: center;
+  padding: 20px;
 }

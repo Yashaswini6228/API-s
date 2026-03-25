@@ -1,6 +1,6 @@
 import React from 'react'
 import './AddUser.css'
-import { Link,useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
 import { useFormik } from 'formik'
@@ -40,7 +40,7 @@ const AddUser = () => {
             yearOfJoining: "",
             yearOfPassout: "",
             tenthPercentage: "",
-            resume:""
+            resume: ""
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
@@ -62,11 +62,11 @@ const AddUser = () => {
                         'Content-Type': 'multipart/form-data'
                     }
                 })
-                toast.success(response.data.message, {position: "top-right"})
+                toast.success(response.data.message, { position: "top-right" })
                 navigate("/")
             } catch (error) {
                 console.log(error)
-                toast.error('Error adding user', {position: "top-right"})
+                toast.error('Error adding user', { position: "top-right" })
             }
         }
     });
@@ -81,10 +81,10 @@ const AddUser = () => {
         e.preventDefault();
         formik.handleSubmit(e);
     }
-    
+
     return (
         <div className='addUser'>
-
+            <Link to="/home" className="btns"><i className="fa-solid fa-arrow-left" ></i></Link>
             <h3>User Registration</h3>
             <form className='addUserForm' onSubmit={submitForm}>
                 <div className='formSection'>
@@ -156,8 +156,9 @@ const AddUser = () => {
                     </div>
                 </div>
 
-            
+
                 <div className='formSection'>
+
                     <h4>Academic Details</h4>
                     <div className='formGrid'>
                         <div className='inputGroup'>
@@ -199,7 +200,7 @@ const AddUser = () => {
 
                         <div className='inputGroup'>
                             <label htmlFor='resume'>Resume*:</label>
-                            <input 
+                            <input
                                 type="file"
                                 id='resume'
                                 onChange={handleFileChange}
@@ -215,7 +216,7 @@ const AddUser = () => {
 
                         <div className='inputGroup'>
                             <label htmlFor='tenthPercentage'>Tenth Percentage:</label>
-                            <input 
+                            <input
                                 type="number"
                                 id='tenthPercentage'
                                 onChange={formik.handleChange}

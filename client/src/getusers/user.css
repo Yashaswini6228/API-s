@@ -83,10 +83,10 @@
 }
 
 .userTable p .btn {
-    /* padding: 10px; */
+    padding: 1px 10px;
     background: none;
     color: #0052cc;
-    margin-top: 10px;
+
     font-size: 15px;
 }
 
