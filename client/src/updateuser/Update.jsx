@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import './update.css'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import axios from 'axios'
+import axiosInstance from '../utils/axiosConfig'
 import { toast } from 'react-hot-toast'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
@@ -54,19 +54,24 @@ const UpdateUser = () => {
                 formData.append('password', values.password);
                 formData.append('mobileNumber', values.mobileNumber);
                 formData.append('yearOfJoining', values.yearOfJoining);
-                formData.append('yearOfPassout', values.yearOfPassout);
-                formData.append('tenthPercentage', values.tenthPercentage);
+
+                // Only append optional fields if they have values
+                if (values.yearOfPassout) {
+                    formData.append('yearOfPassout', values.yearOfPassout);
+                }
+                if (values.tenthPercentage) {
+                    formData.append('tenthPercentage', values.tenthPercentage);
+                }
                 if (values.resume && values.resume instanceof File) {
                     formData.append('resume', values.resume);
                 }
 
-                const response = await axios.put(`http://localhost:8000/api/update/getById/${id}`, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
+                // Don't set Content-Type header manually - let axios handle it
+                const response = await axiosInstance.put(`/updateuser/${id}`, formData)
                 toast.success("User updated successfully", { position: "top-right" })
-                navigate("/home")
+                setTimeout(() => {
+                    navigate("/home")
+                }, 2000);
             } catch (error) {
                 console.log(error)
                 toast.error('Error updating user', { position: "top-right" })
@@ -75,7 +80,7 @@ const UpdateUser = () => {
     });
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/api/getById/${id}`)
+        axiosInstance.get(`/getuserbyid/${id}`)
             .then(response => {
                 formik.setValues({
                     name: response.data.name || "",
@@ -216,7 +221,7 @@ const UpdateUser = () => {
 
                         <div className='inputGroup'>
                             <label htmlFor='tenthPercentage'>Tenth Percentage:</label>
-                            <input 
+                            <input
                                 type="number"
                                 id='tenthPercentage'
                                 onChange={formik.handleChange}
@@ -232,7 +237,7 @@ const UpdateUser = () => {
 
                         <div className='inputGroup'>
                             <label htmlFor='resume'>Resume:</label>
-                            <input 
+                            <input
                                 type="file"
                                 id='resume'
                                 onChange={handleFileChange}

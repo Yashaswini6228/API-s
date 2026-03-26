@@ -1,5 +1,5 @@
 import React from 'react'
-import './AddUser.css'
+import "./registeruser.css"
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
@@ -7,7 +7,7 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
 
-const AddUser = () => {
+const RegisterUser = () => {
     const navigate = useNavigate();
 
     const validationSchema = Yup.object({
@@ -51,7 +51,7 @@ const AddUser = () => {
                 formData.append('password', values.password);
                 formData.append('mobileNumber', values.mobileNumber);
                 formData.append('yearOfJoining', values.yearOfJoining);
-                
+
                 if (values.yearOfPassout) {
                     formData.append('yearOfPassout', values.yearOfPassout);
                 }
@@ -64,7 +64,7 @@ const AddUser = () => {
 
                 const response = await axios.post('http://localhost:8000/api/register', formData)
                 toast.success(response.data.message, { position: "top-right" })
-                navigate("/home")
+                navigate("/")
             } catch (error) {
                 console.log('Error response:', error.response?.data);
                 console.log('Error status:', error.response?.status);
@@ -86,7 +86,7 @@ const AddUser = () => {
 
     return (
         <div className='addUser'>
-            <Link to="/home" className="btns"><i className="fa-solid fa-arrow-left" ></i></Link>
+            <Link to="/" className="btns"><i className="fa-solid fa-arrow-left" ></i></Link>
             <h3>User Registration</h3>
             <form className='addUserForm' onSubmit={submitForm}>
                 <div className='formSection'>
@@ -236,11 +236,10 @@ const AddUser = () => {
 
                 <div className='formActions'>
                     <button type="submit" className="btn btn-primary">Register User</button>
-                    
                 </div>
             </form>
         </div>
     )
 }
 
-export default AddUser
+export default RegisterUser

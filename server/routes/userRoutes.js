@@ -1,14 +1,30 @@
-import express from 'express';
+import express from "express";
+import multer from "multer";
+import {
+  getAllUsers,
+  getUserById,
+  update,
+  deleteUser,
+  login,
+  create,
+  refreshToken
+} from "../controller/userController.js";
 
-import { create,getAllUsers,getUserById,update,deleteUser,login} from '../controller/userController.js';
+import verifyAccessToken, { verifyAdmin } from "../middleware/authMiddleware.js";
 
-const route = express.Router();
+const router = express.Router();
+const upload = multer({ dest: './uploads/' });
 
-route.post('/user', create);
-route.post('/login', login);
-route.get('/users', getAllUsers);
-route.get('/getById/:id', getUserById);
-route.put('/update/getById/:id', update);
-route.delete('/delete/getById/:id', deleteUser);
+router.post("/register", upload.single('resume'), create);
+router.post("/login", login);
 
-export default route;
+router.get("/getallusers", verifyAccessToken, getAllUsers);
+router.get("/getuserbyid/:id", verifyAccessToken, getUserById);
+
+router.post("/refresh-token", refreshToken);
+
+
+router.put("/updateuser/:id", verifyAccessToken, upload.single('resume'), update);
+router.delete("/deleteuser/:id", verifyAccessToken, verifyAdmin, deleteUser);
+
+export default router;

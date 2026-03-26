@@ -2,7 +2,7 @@
 import './home.css'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
-import axios from 'axios'
+import axiosInstance from '../utils/axiosConfig'
 
 const Home = () => {
     const navigate = useNavigate();
@@ -12,7 +12,7 @@ const Home = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/api/users');
+                const response = await axiosInstance.get('/getallusers');
                 setUsers(response.data);
                 setLoading(false);
             } catch (error) {
@@ -32,7 +32,7 @@ const Home = () => {
     const handleDelete = async (userId) => {
         if (window.confirm('Are you sure you want to delete this user?')) {
             try {
-                await axios.delete(`http://localhost:8000/api/delete/getById/${userId}`);
+                await axiosInstance.delete(`/users/${userId}`);
                 toast.success('User deleted successfully', { position: "top-right" });
                 // Refresh the users list
                 setUsers(users.filter(user => user._id !== userId));

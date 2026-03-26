@@ -4,6 +4,7 @@ import AddUser from './adduser/AddUser';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import UpdateUser from './updateuser/Update';
 import Home from './homepage/home';
+import RegisterUser from './registeruser/RegisterUser';
 
 function App() {
   const route = createBrowserRouter([
@@ -22,7 +23,12 @@ function App() {
     {
       path: "/update/:id",
       element: <UpdateUser />
+    },
+    {
+      path: "/register",
+      element: <RegisterUser />
     }
+    
   ]);
 
 

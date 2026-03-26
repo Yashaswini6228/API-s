@@ -1,6 +1,6 @@
 ﻿import React, { useEffect, useState } from 'react'
 import './user.css'
-import axios from 'axios'
+import axiosInstance from '../utils/axiosConfig'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast';
 import { useFormik } from 'formik'
@@ -29,14 +29,13 @@ const User = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
-        const response = await axios.post('http://localhost:8000/api/login', {
+        const response = await axiosInstance.post('/login', {
           email: values.email,
           password: values.password
-        });
-
-        // Store the logged-in user ID in localStorage
-        if (response.data.data && response.data.data._id) {
-          localStorage.setItem('loggedInUserId', response.data.data._id);
+        });       
+console.log(' ', response);
+        if (response.data.accessToken) {
+          localStorage.setItem('accessToken', response.data.accessToken);
         }
 
         toast.success('Login successful')
@@ -57,7 +56,7 @@ const User = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/users')
+        const response = await axiosInstance.get('/getallusers')
         setUsers(response.data)
       } catch (error) {
         console.log('Error fetching users:', error)
@@ -108,7 +107,7 @@ const User = () => {
           </button>
         </form>
         <p>Don't have an account?
-          <button onClick={() => navigate('/add')} className="btn btn-primary">
+          <button onClick={() => navigate('/')} className="btn btn-primary">
             sign up 
           </button>
         </p>
