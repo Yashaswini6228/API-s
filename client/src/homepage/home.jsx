@@ -82,7 +82,6 @@ const Home = () => {
                                                 onClick={() => handleUpdate(user._id)}
                                                 className='btn-update'
                                             >
-
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </button>
                                             <button
