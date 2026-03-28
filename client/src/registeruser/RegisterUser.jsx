@@ -64,7 +64,7 @@ const RegisterUser = () => {
 
                 const response = await axios.post('http://localhost:8000/api/register', formData)
                 toast.success(response.data.message, { position: "top-right" })
-                navigate("/")
+                navigate("/");
             } catch (error) {
                 console.log('Error response:', error.response?.data);
                 console.log('Error status:', error.response?.status);

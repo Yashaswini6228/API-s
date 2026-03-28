@@ -5,6 +5,9 @@ import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast';
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
+import { setAuthToken } from '../utils/axiosConfig';
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 
 const validationSchema = Yup.object({
@@ -20,6 +23,7 @@ const validationSchema = Yup.object({
 const User = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([])
+  const { setToken } = useContext(AuthContext);
 
   const formik = useFormik({
     initialValues: {
@@ -32,10 +36,15 @@ const User = () => {
         const response = await axiosInstance.post('/login', {
           email: values.email,
           password: values.password
-        });       
-console.log(' ', response);
+        });
+        console.log(' ', response);
         if (response.data.accessToken) {
-          localStorage.setItem('accessToken', response.data.accessToken);
+          const token = response.data.accessToken;
+
+          localStorage.setItem('accessToken', token);
+
+          setAuthToken(token);   // ✅ update axios 
+          setToken(token);       // ✅ update context
         }
 
         toast.success('Login successful')
@@ -65,6 +74,8 @@ console.log(' ', response);
 
     fetchData()
   }, []);
+
+
 
   return (
     <div>
@@ -107,8 +118,8 @@ console.log(' ', response);
           </button>
         </form>
         <p>Don't have an account?
-          <button onClick={() => navigate('/')} className="btn btn-primary">
-            sign up 
+          <button onClick={() => navigate('/register')} className="btn btn-primary">
+            sign up
           </button>
         </p>
 

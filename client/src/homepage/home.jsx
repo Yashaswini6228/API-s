@@ -32,7 +32,7 @@ const Home = () => {
     const handleDelete = async (userId) => {
         if (window.confirm('Are you sure you want to delete this user?')) {
             try {
-                await axiosInstance.delete(`/users/${userId}`);
+                await axiosInstance.delete(`/deleteuser/${userId}`);
                 toast.success('User deleted successfully', { position: "top-right" });
                 // Refresh the users list
                 setUsers(users.filter(user => user._id !== userId));
