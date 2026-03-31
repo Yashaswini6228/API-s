@@ -66,7 +66,6 @@ const UpdateUser = () => {
                     formData.append('resume', values.resume);
                 }
 
-                // Don't set Content-Type header manually - let axios handle it
                 const response = await axiosInstance.put(`/updateuser/${id}`, formData)
                 toast.success("User updated successfully", { position: "top-right" })
                 setTimeout(() => {

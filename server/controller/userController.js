@@ -49,6 +49,78 @@ export const getAllUsers = async (req, res) => {
     }
 }
 
+export const getUsersWithFilters = async (req, res) => {
+    try {
+        const {
+            page = 1,
+            limit = 5,
+            query = "",
+            role = "",
+            sortBy = "createdAt",
+            sortOrder = "desc"
+        } = req.query;
+
+        const filter = { $and: [] };
+        const q = typeof query === "string" ? query.trim() : String(query ?? "").trim();
+
+        // Search by name or email
+        if (q) {
+            filter.$and.push({
+                $or: [
+                    { name: { $regex: q, $options: "i" } },
+                    { email: { $regex: q, $options: "i" } },
+                ]
+            });
+        }
+
+        // Filter by role if provided
+        if (role && role !== "") {
+            filter.$and.push({ role });
+        }
+
+        const finalFilter = filter.$and.length > 0 ? filter : {};
+
+        // Pagination
+        const pageNum = parseInt(page) || 1;
+        const limitNum = parseInt(limit) || 5;
+        const skip = (pageNum - 1) * limitNum;
+
+        // Sorting
+        const sortObject = {};
+        sortObject[sortBy] = sortOrder === "asc" ? 1 : -1;
+
+        const [users, total] = await Promise.all([
+            User.find(finalFilter)
+                .sort(sortObject)
+                .skip(skip)
+                .limit(limitNum),
+            User.countDocuments(finalFilter),
+        ]);
+
+        return res.status(200).json({
+            users,
+            total,
+            page: pageNum,
+            limit: limitNum,
+            totalPages: Math.ceil(total / limitNum),
+            hasSearch: !!q,
+            hasFilters: !!role,
+        });
+    } catch (error) {
+        console.error("Error fetching users with filters:", error);
+        return res.status(500).json({
+            users: [],
+            total: 0,
+            page: 1,
+            limit: 5,
+            totalPages: 0,
+            hasSearch: false,
+            hasFilters: false,
+            errorMessage: error.message
+        });
+    }
+};
+
 export const getUserById = async (req, res) => {
     try {
         const { id } = req.params;

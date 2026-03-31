@@ -33,6 +33,7 @@
   display: flex;
   gap: 15px;
   flex-direction: column;
+  margin-bottom: 30px;
 }
 
 .homeButtons button {
@@ -160,4 +161,228 @@
   font-size: 16px;
   text-align: center;
   padding: 20px;
+}
+
+/* Search and Filters Section */
+.searchAndFiltersSection {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.searchBox {
+  flex: 1;
+  min-width: 250px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.filterBox {
+  flex: 0 0 auto;
+}
+
+.roleFilterSelect {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: white;
+  color: #333;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  min-width: 150px;
+}
+
+.roleFilterSelect:hover {
+  border-color: #667eea;
+}
+
+.roleFilterSelect:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.btnClearFilters {
+  padding: 10px 20px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.btnClearFilters:hover {
+  background-color: #da190b;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(244, 67, 54, 0.3);
+}
+
+/* New Pagination Styles */
+.paginationContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 12px 0;
+  border-bottom: 1px solid #e0e0e0;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.paginationLeft {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.paginationRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.paginationRowsPerPage {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.paginationRowsPerPage label {
+  color: #333;
+  font-weight: 500;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.rowsPerPageSelect {
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: white;
+  color: #333;
+  transition: border-color 0.3s ease;
+  min-width: 70px;
+}
+
+.rowsPerPageSelect:hover {
+  border-color: #667eea;
+}
+
+.rowsPerPageSelect:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.paginationTotalItems {
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.paginationArrowBtn {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background-color: white;
+  color: #666;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  min-width: 40px;
+  text-align: center;
+}
+
+.paginationArrowBtn:hover:not(:disabled) {
+  border-color: #667eea;
+  color: #667eea;
+  background-color: #f5f5f5;
+}
+
+.paginationArrowBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pageNumbersContainer {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pageNumberBtn {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background-color: white;
+  color: #333;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  min-width: 40px;
+  text-align: center;
+}
+
+.pageNumberBtn:hover {
+  border-color: #667eea;
+  color: #667eea;
+  background-color: #f5f5f5;
+}
+
+.pageNumberBtn.active {
+  background-color: #667eea;
+  color: white;
+  border-color: #667eea;
+  box-shadow: 0 2px 5px rgba(102, 126, 234, 0.3);
+}
+
+/* Role Badge Styles */
+.roleBadge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.roleBadge.user {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.roleBadge.admin {
+  background-color: #fff3e0;
+  color: #f57c00;
 }

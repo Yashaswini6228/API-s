@@ -27,8 +27,8 @@ const AddUser = () => {
             .required('Year of Joining is required!'),
         // yearOfPassout: Yup.string(),
         // tenthPercentage: Yup.number(),
-        // resume: Yup.mixed()
-        //     .required('Resume is required!')
+        resume: Yup.mixed()
+            .required('Resume is required!')
     });
 
     const formik = useFormik({

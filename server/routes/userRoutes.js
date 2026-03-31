@@ -2,6 +2,7 @@ import express from "express";
 import multer from "multer";
 import {
   getAllUsers,
+  getUsersWithFilters,
   getUserById,
   update,
   deleteUser,
@@ -19,6 +20,7 @@ router.post("/register", upload.single('resume'), create);
 router.post("/login", login);
 
 router.get("/getallusers", verifyAccessToken, getAllUsers);
+router.get("/getuserswithfilters", verifyAccessToken, getUsersWithFilters);
 router.get("/getuserbyid/:id", verifyAccessToken, getUserById);
 
 router.post("/refresh-token", refreshToken);

@@ -27,8 +27,8 @@ const RegisterUser = () => {
             .required('Year of Joining is required!'),
         // yearOfPassout: Yup.string(),
         // tenthPercentage: Yup.number(),
-        // resume: Yup.mixed()
-        //     .required('Resume is required!')
+        resume: Yup.mixed()
+            .required('Resume is required!')
     });
 
     const formik = useFormik({
@@ -64,7 +64,7 @@ const RegisterUser = () => {
 
                 const response = await axios.post('http://localhost:8000/api/register', formData)
                 toast.success(response.data.message, { position: "top-right" })
-                navigate("/")
+                navigate("/");
             } catch (error) {
                 console.log('Error response:', error.response?.data);
                 console.log('Error status:', error.response?.status);
