@@ -5,6 +5,14 @@ import {
     generateRefreshToken,
 } from "../utils/token.js";
 
+
+
+const loginAttempts = {}; 
+
+const MAX_ATTEMPTS = 5;
+const LOCK_TIME = 10 * 60 * 1000;
+
+
 export const create = async (req, res) => {
     try {
         const userData = {
@@ -63,7 +71,7 @@ export const getUsersWithFilters = async (req, res) => {
         const filter = { $and: [] };
         const q = typeof query === "string" ? query.trim() : String(query ?? "").trim();
 
-        // Search by name or email
+      
         if (q) {
             filter.$and.push({
                 $or: [
@@ -73,19 +81,19 @@ export const getUsersWithFilters = async (req, res) => {
             });
         }
 
-        // Filter by role if provided
+ 
         if (role && role !== "") {
             filter.$and.push({ role });
         }
 
         const finalFilter = filter.$and.length > 0 ? filter : {};
 
-        // Pagination
+     
         const pageNum = parseInt(page) || 1;
         const limitNum = parseInt(limit) || 5;
         const skip = (pageNum - 1) * limitNum;
 
-        // Sorting
+        
         const sortObject = {};
         sortObject[sortBy] = sortOrder === "asc" ? 1 : -1;
 
@@ -160,20 +168,56 @@ export const deleteUser = async (req, res) => {
         res.status(500).json({ errorMessage: error.message });
     }
 };
-
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
+        
+        const userAttempts = loginAttempts[email] || { count: 0, lockUntil: null };
+
+    
+        if (userAttempts.lockUntil && Date.now() < userAttempts.lockUntil) {
+            const remainingTime = Math.ceil((userAttempts.lockUntil - Date.now()) / 1000);
+            return res.status(403).json({
+                message: `Account locked. Try again in ${remainingTime} seconds`
+            });
+        }
+
         const user = await User.findOne({ email });
+
         if (!user) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+            
+            userAttempts.count += 1;
+            loginAttempts[email] = userAttempts;
+
+            return res.status(401).json({
+                message: 'Invalid credentials',
+                remainingAttempts: MAX_ATTEMPTS - userAttempts.count
+            });
         }
 
         if (user.password !== password) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+           
+            userAttempts.count += 1;
+
+         
+            if (userAttempts.count >= MAX_ATTEMPTS) {
+                userAttempts.lockUntil = Date.now() + LOCK_TIME;
+                userAttempts.count = 0;
+            }
+
+            loginAttempts[email] = userAttempts;
+
+            return res.status(401).json({
+                message: 'Invalid credentials',
+                remainingAttempts: MAX_ATTEMPTS - userAttempts.count
+            });
         }
 
+       
+        loginAttempts[email] = { count: 0, lockUntil: null };
+
+    
         const accessToken = generateAccessToken(user);
         console.log('Generated Access Token:', accessToken);
 
@@ -213,4 +257,39 @@ export const refreshToken = (req, res) => {
 
         res.json({ accessToken: newAccessToken });  
     });
+
+};
+export const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  const userAttempts = loginAttempts[email] || { count: 0, lockUntil: null };
+
+  // 🔒 Check lock
+  if (userAttempts.lockUntil && Date.now() < userAttempts.lockUntil) {
+    return res.status(403).json({
+      message: "Account locked. Try again later"
+    });
+  }
+
+  const user = await findUser(email); 
+
+  if (!user || user.password !== password) {
+    userAttempts.count += 1;
+
+    if (userAttempts.count >= MAX_ATTEMPTS) {
+      userAttempts.lockUntil = Date.now() + LOCK_TIME;
+      userAttempts.count = 0;
+    }
+
+    loginAttempts[email] = userAttempts;
+
+    return res.status(401).json({
+      message: "Invalid credentials",
+      remainingAttempts: MAX_ATTEMPTS - userAttempts.count
+    });
+  }
+
+  loginAttempts[email] = { count: 0, lockUntil: null };
+
+  res.json({ message: "Login successful" });
 };

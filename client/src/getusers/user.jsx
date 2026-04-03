@@ -9,7 +9,6 @@ import { setAuthToken } from '../utils/axiosConfig';
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
-
 const validationSchema = Yup.object({
   email: Yup.string()
     .required('Email is required!')
@@ -19,10 +18,16 @@ const validationSchema = Yup.object({
     .min(6, 'Password must be at least 6 characters'),
 });
 
-
 const User = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([])
+
+  const [loginError, setLoginError] = useState("");
+
+  // 🔒 NEW STATES
+  const [lockTime, setLockTime] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(0);
+
   const { setToken } = useContext(AuthContext);
 
   const formik = useFormik({
@@ -37,30 +42,75 @@ const User = () => {
           email: values.email,
           password: values.password
         });
-        console.log(' ', response);
+
         if (response.data.accessToken) {
           const token = response.data.accessToken;
 
           localStorage.setItem('accessToken', token);
 
-          setAuthToken(token);   // ✅ update axios 
-          setToken(token);       // ✅ update context
+          setAuthToken(token);
+          setToken(token);
         }
+
+        setLoginError("");
+        setLockTime(null);
+        setTimeLeft(0);
 
         toast.success('Login successful')
         formik.resetForm();
         navigate('/home');
 
       } catch (error) {
-        console.log(error)
-        if (error.response && error.response.status === 401) {
-          toast.error('Invalid credentials', { position: "top-right" })
+        console.log(error);
+
+        const data = error.response?.data;
+
+        if (data) {
+          if (data.remainingAttempts !== undefined) {
+            const msg = `Incorrect password, ${data.remainingAttempts} attempts left`;
+            setLoginError(msg);
+            toast.error(msg, { position: "top-right" });
+          } else {
+            setLoginError(data.message);
+            toast.error(data.message, { position: "top-right" });
+
+            // 🔒 HANDLE LOCK
+            if (data.message.includes("locked")) {
+              const seconds = parseInt(data.message.match(/\d+/)?.[0] || "0");
+              const unlockTime = Date.now() + seconds * 1000;
+
+              setLockTime(unlockTime);
+              setTimeLeft(seconds);
+            }
+          }
         } else {
-          toast.error('Error during login', { position: "top-right" })
+          setLoginError("Error during login");
+          toast.error('Error during login', { position: "top-right" });
         }
       }
     }
   });
+
+  // ⏳ COUNTDOWN TIMER
+  useEffect(() => {
+    let timer;
+
+    if (lockTime) {
+      timer = setInterval(() => {
+        const remaining = Math.max(0, Math.floor((lockTime - Date.now()) / 1000));
+
+        setTimeLeft(remaining);
+
+        if (remaining <= 0) {
+          clearInterval(timer);
+          setLockTime(null);
+          setLoginError("");
+        }
+      }, 1000);
+    }
+
+    return () => clearInterval(timer);
+  }, [lockTime]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -74,8 +124,6 @@ const User = () => {
 
     fetchData()
   }, []);
-
-
 
   return (
     <div>
@@ -98,25 +146,47 @@ const User = () => {
               <span className="error">{formik.errors.email}</span>
             ) : null}
           </div>
+
           <div className='inputGroup'>
             <label htmlFor='password'>Password*:</label>
-            <input type="password"
+            <input
+              type="password"
               id='password'
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.password}
               name='password'
               autoComplete='off'
               placeholder='Enter Password'
+              value={formik.values.password}
+              onBlur={formik.handleBlur}
+              onChange={(e) => {
+                formik.handleChange(e);
+                setLoginError("");
+              }}
             />
+
             {formik.touched.password && formik.errors.password ? (
               <span className="error">{formik.errors.password}</span>
             ) : null}
+
+            {/* 🔴 ERROR / LOCK MESSAGE */}
+            {loginError && (
+              <span className="error">
+                {timeLeft > 0
+                  ? `Account locked. Try again in ${timeLeft} seconds`
+                  : loginError}
+              </span>
+            )}
           </div>
-          <button type="submit" className="btn btn-primary">
-            sign in
+
+          {/* 🔘 DISABLED BUTTON DURING LOCK */}
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={timeLeft > 0}
+          >
+            {timeLeft > 0 ? `Try again in ${timeLeft}s` : "sign in"}
           </button>
         </form>
+
         <p>Don't have an account?
           <button onClick={() => navigate('/register')} className="btn btn-primary">
             sign up

@@ -25,7 +25,6 @@ router.get("/getuserbyid/:id", verifyAccessToken, getUserById);
 
 router.post("/refresh-token", refreshToken);
 
-
 router.put("/updateuser/:id", verifyAccessToken, upload.single('resume'), update);
 router.delete("/deleteuser/:id", verifyAccessToken, verifyAdmin, deleteUser);
 
