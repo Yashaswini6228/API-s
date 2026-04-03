@@ -1,5 +1,6 @@
 import express from "express";
 import multer from "multer";
+import { loginLimiter } from "../middleware/ratelimiter.js";
 import {
   getAllUsers,
   getUsersWithFilters,
@@ -17,7 +18,7 @@ const router = express.Router();
 const upload = multer({ dest: './uploads/' });
 
 router.post("/register", upload.single('resume'), create);
-router.post("/login", login);
+router.post("/login", loginLimiter, login);
 
 router.get("/getallusers", verifyAccessToken, getAllUsers);
 router.get("/getuserswithfilters", verifyAccessToken, getUsersWithFilters);
